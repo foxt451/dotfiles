@@ -44,7 +44,6 @@ Plug 'github/copilot.vim'
 Plug 'tpope/vim-vinegar'
 Plug 'tpope/vim-obsession'
 Plug 'junegunn/fzf.vim'
-Plug 'junegunn/vim-peekaboo'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'simnalamburt/vim-mundo'
 Plug 'sheerun/vim-polyglot'
