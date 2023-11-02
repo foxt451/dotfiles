@@ -1,0 +1,23 @@
+[user]
+	email = svpetrenko123@gmail.com
+	name = Sviat
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+[core]
+	editor = vim
+[merge]
+	tool = vimdiff
+	conflictstyle = diff3
+[difftool]
+	prompt = false
+[init]
+	defaultBranch = main
+[alias]
+	ci = commit
+	amend = ci
+	co = checkout
+	br = branch
+	st = status
