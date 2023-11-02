@@ -1,4 +1,5 @@
 " general settings {{{
+nnoremap <F3> :e $MYVIMRC<CR>
 " May need for Vim (not Neovim) since coc.nvim calculates byte offset by count
 " utf-8 byte sequence
 set encoding=utf-8
@@ -46,6 +47,7 @@ Plug 'junegunn/fzf.vim'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'simnalamburt/vim-mundo'
 Plug 'sheerun/vim-polyglot'
+Plug 'Raimondi/delimitMate'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-dispatch'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
