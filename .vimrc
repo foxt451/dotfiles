@@ -14,7 +14,6 @@ set updatetime=300
 set signcolumn=yes
 set number
 set relativenumber
-set cursorline
 set showcmd
 syntax on
 set re=0
@@ -40,14 +39,15 @@ set grepprg=rg\ --vimgrep\ --smart-case\ --follow
 " plugins {{{
 call plug#begin()
 Plug 'tpope/vim-eunuch'
+Plug 'Raimondi/delimitMate'
 Plug 'github/copilot.vim'
 Plug 'tpope/vim-vinegar'
+Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
 Plug 'tpope/vim-obsession'
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'simnalamburt/vim-mundo'
 Plug 'sheerun/vim-polyglot'
-Plug 'Raimondi/delimitMate'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-dispatch'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -169,10 +169,7 @@ let g:copilot_no_tab_map = v:true
 " }}}
 
 " colorscheme {{{
-if has('termguicolors')
-  set termguicolors
-endif
-colorscheme zaibatsu
+colorscheme catppuccin-macchiato
 " }}}
 
 " netrw {{{
