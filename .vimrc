@@ -1,5 +1,6 @@
 " general settings {{{
 nnoremap <F3> :e $MYVIMRC<CR>
+:nnoremap <F2> :buffers t<CR>:buffer<Space>
 " May need for Vim (not Neovim) since coc.nvim calculates byte offset by count
 " utf-8 byte sequence
 set encoding=utf-8
@@ -26,11 +27,6 @@ set scrolloff=5
 set incsearch
 " }}}
 
-augroup foxt451_vimrc
-    autocmd!
-    autocmd BufWritePost $MYVIMRC source $MYVIMRC
-augroup END
-
 nnoremap <silent> <C-f> :Files<CR>
 nnoremap <silent> <Leader>H :Helptags<CR>
 nnoremap <silent> <Leader>h: :History:<CR>
@@ -39,11 +35,12 @@ set grepprg=rg\ --vimgrep\ --smart-case\ --follow
 " plugins {{{
 call plug#begin()
 Plug 'tpope/vim-eunuch'
+Plug 'itchyny/lightline.vim'
 Plug 'Raimondi/delimitMate'
 Plug 'github/copilot.vim'
 Plug 'tpope/vim-vinegar'
-Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
 Plug 'tpope/vim-obsession'
+Plug 'catppuccin/vim', { 'as': 'catppuccin' }
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'simnalamburt/vim-mundo'
@@ -63,17 +60,19 @@ nnoremap <F5> :MundoToggle<CR>
 " }}}
 
 " statusline {{{
-set statusline=%<%f\ %h%m%r%{FugitiveStatusline()}%=%-14.(%l,%c%V%)\ %P
 set laststatus=2
-" }}}
-
-" sessions, views, viminfo {{{
-augroup foxt451_sessions
-    autocmd!
-    autocmd BufWinLeave *.* mkview
-    autocmd BufWinEnter *.* silent loadview
-augroup END
-set viewoptions-=curdir
+set noshowmode
+let g:lightline = {
+    \ 'colorscheme': 'catppuccin_macchiato',
+    \ 'active': {
+    \   'left': [ [ 'mode', 'paste' ],
+    \             [ 'gitbranch', 'cocstatus', 'readonly', 'filename', 'modified' ] ]
+    \ },
+    \ 'component_function': {
+    \   'gitbranch': 'FugitiveHead',
+    \   'cocstatus': 'coc#status'
+    \ },
+    \ }
 " }}}
 
 " folds {{{
@@ -160,6 +159,8 @@ command! -nargs=0 Format :call CocActionAsync('format')
 let g:coc_global_extensions = ['coc-json', 'coc-tsserver']
 let g:coc_user_config = {}
 let g:coc_user_config['coc.preferences.formatOnSaveFiletypes'] = ['*']
+
+nnoremap <silent><nowait> <space>a  :<C-u>CocList diagnostics<cr>
 " }}}
 
 " copilot {{{
@@ -174,7 +175,10 @@ if !has('gui_running') && &term =~ '^\%(screen\|tmux\)'
  let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 endif
 set termguicolors
-colorscheme catppuccin-macchiato
+set background=dark
+colorscheme catppuccin_macchiato
+highlight CocHighlightText ctermbg=DarkMagenta guibg=DarkMagenta
+highlight CocHighlightText ctermfg=Grey guifg=Grey
 " }}}
 
 " netrw {{{
@@ -183,13 +187,6 @@ let g:netrw_altfile = 1
 " }}}
 
 packadd! matchit
-
-" autosave {{{
-augroup AUTOSAVE
-  au!
-  autocmd InsertLeave,TextChanged,FocusLost * silent! update
-augroup END
-" }}}
 
 " terminal {{{
 nnoremap <Leader>t :vertical botright term ++close<cr>
