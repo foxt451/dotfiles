@@ -1,6 +1,6 @@
 " general settings {{{
 nnoremap <F3> :e $MYVIMRC<CR>
-:nnoremap <F2> :buffers t<CR>:buffer<Space>
+nnoremap <F2> :buffers t<CR>:buffer<Space>
 " May need for Vim (not Neovim) since coc.nvim calculates byte offset by count
 " utf-8 byte sequence
 set encoding=utf-8
