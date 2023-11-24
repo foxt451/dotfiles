@@ -1,54 +1,29 @@
 return {
   {
-    "mfussenegger/nvim-dap",
-    config = function(_, opts)
-      local dap = require("dap")
-      dap.adapters["pwa-node"] = {
-        type = "server",
-        host = "localhost",
-        port = "${port}",
-        executable = {
-          command = "js-debug-adapter",
-          args = { "${port}" },
-        },
-      }
-      local custom_adapter = 'pwa-node-custom'
-      dap.adapters[custom_adapter] = function(cb, config)
-        if config.preLaunchTask then
-          vim.notify('Running preLaunchTask: ' .. config.preLaunchTask)
-          vim.fn.system(config.preLaunchTask)
-          vim.notify('Finished running preLaunchTask: ' .. config.preLaunchTask)
-        end
-        config.type = 'pwa-node'
-        dap.run(config)
-      end
+    "microsoft/vscode-js-debug",
+    build = "npm install --legacy-peer-deps && npx gulp vsDebugServerBundle && mv dist out",
+  },
+  {
+    "mxsdev/nvim-dap-vscode-js",
+    dependencies = {
+      "mfussenegger/nvim-dap",
+      "microsoft/vscode-js-debug",
+    },
+    config = function()
+      local utils = require("dap-vscode-js.utils")
+      require("dap-vscode-js").setup({
+        adapters = { 'pwa-node', 'pwa-chrome', 'pwa-msedge', 'node-terminal', 'pwa-extensionHost' }, -- which adapters to register in nvim-dap
+        debugger_path = utils.join_paths(utils.get_runtime_dir(), "lazy/vscode-js-debug")
+      })
       for _, language in ipairs({ "typescript", "javascript" }) do
-        dap.configurations[language] = {
-          {
-            name = 'Compile & Debug Main Process (tsc + pwa-node)',
-            type = custom_adapter,
-            request = 'launch',
-            preLaunchTask = 'tsc --sourceMap',
-            program = '${file}',
-            cwd = '${workspaceFolder}',
-            sourceMaps = true,
-            protocol = "inspector",
-            runtimeExecutable = 'node',
-            skipFiles = {
-              "<node_internals>/**",
-              "node_modules/**"
-            },
-            resolveSourceMapLocations = {
-              "${workspaceFolder}/**",
-              "!**/node_modules/**"
-            }
-          },
+        require("dap").configurations[language] = {
           {
             type = "pwa-node",
             request = "launch",
             name = "Launch file",
             program = "${file}",
             cwd = "${workspaceFolder}",
+            console = "integratedTerminal",
             skipFiles = {
               "<node_internals>/**",
             },
@@ -71,6 +46,7 @@ return {
             },
             sourceMaps = true,
             protocol = "inspector",
+            console = "integratedTerminal",
             skipFiles = {
               "<node_internals>/**",
               "node_modules/**"
@@ -85,27 +61,21 @@ return {
             request = "launch",
             name = "Launch Current File (pwa-node with ts-node)",
             cwd = "${workspaceFolder}",
-            runtimeArgs = {
-              "--nolazy", "-r", "ts-node/register"
-            },
-            runtimeExecutable = "node",
-            args = {
-              "${file}"
-            },
+            runtimeExecutable = "${workspaceFolder}/node_modules/.bin/ts-node",
+            args = { '${file}' },
             sourceMaps = true,
-            protocol = "inspector",
-            skipFiles = {
-              "<node_internals>/**",
-              "node_modules/**"
-            },
+            protocol = 'inspector',
+            skipFiles = { '<node_internals>/**', 'node_modules/**' },
+            console = "integratedTerminal",
             resolveSourceMapLocations = {
               "${workspaceFolder}/**",
-              "!**/node_modules/**"
-            }
+              "!**/node_modules/**",
+            },
           },
           {
             type = "pwa-node",
             request = "attach",
+            console = "integratedTerminal",
             name = "Attach",
             processId = require 'dap.utils'.pick_process,
             cwd = "${workspaceFolder}",
@@ -122,10 +92,18 @@ return {
             rootPath = "${workspaceFolder}",
             cwd = "${workspaceFolder}",
             console = "integratedTerminal",
-            internalConsoleOptions = "neverOpen",
           }
         }
       end
+    end
+  },
+  {
+    "mfussenegger/nvim-dap",
+    config = function()
+      require("dap").defaults.fallback.external_terminal = {
+        command = 'alacritty',
+        args = { '-e' },
+      }
     end,
     keys = {
       { "<leader>dB", function() require("dap").set_breakpoint(vim.fn.input('Breakpoint condition: ')) end, desc = "Breakpoint Condition" },

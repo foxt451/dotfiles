@@ -42,7 +42,7 @@ return {
               fallback()
             end
           end, { "i", "s" }),
-
+          ['<M-Space>'] = cmp.mapping.complete(),
           ["<S-Tab>"] = cmp.mapping(function(fallback)
             if cmp.visible() then
               cmp.select_prev_item()
