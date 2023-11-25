@@ -1,3 +1,5 @@
+vim.opt.swapfile = false
+
 vim.opt.mouse=""
 vim.opt.guicursor=""
 
