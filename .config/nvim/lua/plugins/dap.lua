@@ -19,6 +19,19 @@ return {
         require("dap").configurations[language] = {
           {
             type = "pwa-node",
+            name = "TSX",
+            request = "launch",
+            program = "${file}",
+            cwd = "${workspaceFolder}",
+            console = "integratedTerminal",
+            skipFiles = {
+              "<node_internals>/**",
+              "${workspaceFolder}/node_modules/**"
+            },
+            runtimeExecutable = "tsx",
+          },
+          {
+            type = "pwa-node",
             request = "launch",
             name = "Launch file",
             program = "${file}",
@@ -56,22 +69,18 @@ return {
               "!**/node_modules/**"
             }
           },
-          {
-            type = "pwa-node",
-            request = "launch",
-            name = "Launch Current File (pwa-node with ts-node)",
-            cwd = "${workspaceFolder}",
-            runtimeExecutable = "${workspaceFolder}/node_modules/.bin/ts-node",
-            args = { '${file}' },
-            sourceMaps = true,
-            protocol = 'inspector',
-            skipFiles = { '<node_internals>/**', 'node_modules/**' },
-            console = "integratedTerminal",
-            resolveSourceMapLocations = {
-              "${workspaceFolder}/**",
-              "!**/node_modules/**",
-            },
-          },
+          -- {
+          --   type = "pwa-node",
+          --   request = "launch",
+          --   name = "Launch Current File (pwa-node with ts-node)",
+          --   cwd = "${workspaceFolder}",
+          --   runtimeExecutable = "ts-node",
+          --   args = { '${file}' },
+          --   protocol = 'inspector',
+          --   skipFiles = { '<node_internals>/**', 'node_modules/**' },
+          --   console = "integratedTerminal",
+          --
+          -- },
           {
             type = "pwa-node",
             request = "attach",
@@ -80,19 +89,19 @@ return {
             processId = require 'dap.utils'.pick_process,
             cwd = "${workspaceFolder}",
           },
-          {
-            type = "pwa-node",
-            request = "launch",
-            name = "Debug Jest Tests",
-            runtimeExecutable = "node",
-            runtimeArgs = {
-              "./node_modules/jest/bin/jest.js",
-              "--runInBand",
-            },
-            rootPath = "${workspaceFolder}",
-            cwd = "${workspaceFolder}",
-            console = "integratedTerminal",
-          }
+          -- {
+          --   type = "pwa-node",
+          --   request = "launch",
+          --   name = "Debug Jest Tests",
+          --   runtimeExecutable = "node",
+          --   runtimeArgs = {
+          --     "./node_modules/jest/bin/jest.js",
+          --     "--runInBand",
+          --   },
+          --   rootPath = "${workspaceFolder}",
+          --   cwd = "${workspaceFolder}",
+          --   console = "integratedTerminal",
+          -- }
         }
       end
     end
@@ -104,6 +113,7 @@ return {
         command = 'alacritty',
         args = { '-e' },
       }
+      require("dap.ext.vscode").load_launchjs()
     end,
     keys = {
       { "<leader>dB", function() require("dap").set_breakpoint(vim.fn.input('Breakpoint condition: ')) end, desc = "Breakpoint Condition" },
@@ -125,28 +135,28 @@ return {
       { "<leader>dw", function() require("dap.ui.widgets").hover() end,                                     desc = "Widgets" },
     },
   },
-  {
-    "rcarriga/nvim-dap-ui",
-    dependencies = {
-      "mfussenegger/nvim-dap",
-    },
-    keys = {
-      { "<leader>du", function() require("dapui").toggle({}) end, desc = "Dap UI" },
-      { "<leader>de", function() require("dapui").eval() end,     desc = "Eval",  mode = { "n", "v" } },
-    },
-    config = function(_, opts)
-      local dap = require("dap")
-      local dapui = require("dapui")
-      dapui.setup(opts)
-      dap.listeners.after.event_initialized["dapui_config"] = function()
-        dapui.open({})
-      end
-      dap.listeners.before.event_terminated["dapui_config"] = function()
-        dapui.close({})
-      end
-      dap.listeners.before.event_exited["dapui_config"] = function()
-        dapui.close({})
-      end
-    end,
-  },
+  -- {
+  --   "rcarriga/nvim-dap-ui",
+  --   dependencies = {
+  --     "mfussenegger/nvim-dap",
+  --   },
+  --   keys = {
+  --     { "<leader>du", function() require("dapui").toggle({}) end, desc = "Dap UI" },
+  --     { "<leader>de", function() require("dapui").eval() end,     desc = "Eval",  mode = { "n", "v" } },
+  --   },
+  --   config = function(_, opts)
+  --     local dap = require("dap")
+  --     local dapui = require("dapui")
+  --     dapui.setup(opts)
+  --     dap.listeners.after.event_initialized["dapui_config"] = function()
+  --       dapui.open({})
+  --     end
+  --     dap.listeners.before.event_terminated["dapui_config"] = function()
+  --       dapui.close({})
+  --     end
+  --     dap.listeners.before.event_exited["dapui_config"] = function()
+  --       dapui.close({})
+  --     end
+  --   end,
+  -- },
 }

@@ -16,7 +16,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
     vim.keymap.set('n', 'go', vim.lsp.buf.type_definition, opts)
     vim.keymap.set('n', '<Leader>rn', vim.lsp.buf.rename, opts)
     vim.keymap.set({ 'n', 'v' }, '<Leader>ca', vim.lsp.buf.code_action, opts)
-    vim.keymap.set({ 'n', 'x' }, '<Leader>p', function()
+    vim.keymap.set({ 'n', 'x' }, '<Leader>cf', function()
       vim.lsp.buf.format { async = true }
     end, opts)
   end,

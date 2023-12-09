@@ -21,3 +21,5 @@
 	co = checkout
 	br = branch
 	st = status
+[pull]
+	rebase = true
