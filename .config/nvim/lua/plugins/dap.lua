@@ -13,7 +13,9 @@ return {
       local utils = require("dap-vscode-js.utils")
       require("dap-vscode-js").setup({
         adapters = { 'pwa-node', 'pwa-chrome', 'pwa-msedge', 'node-terminal', 'pwa-extensionHost' }, -- which adapters to register in nvim-dap
-        debugger_path = utils.join_paths(utils.get_runtime_dir(), "lazy/vscode-js-debug")
+        debugger_path = utils.join_paths(utils.get_runtime_dir(), "lazy/vscode-js-debug"),
+        -- log_file_path = "(stdpath cache)/dap_vscode_js.log",
+        -- log_file_level = vim.log.levels.TRACE,
       })
       for _, language in ipairs({ "typescript", "javascript" }) do
         require("dap").configurations[language] = {
@@ -30,45 +32,45 @@ return {
             },
             runtimeExecutable = "tsx",
           },
-          {
-            type = "pwa-node",
-            request = "launch",
-            name = "Launch file",
-            program = "${file}",
-            cwd = "${workspaceFolder}",
-            console = "integratedTerminal",
-            skipFiles = {
-              "<node_internals>/**",
-            },
-            outFiles = {
-              "${workspaceFolder}/out/**/*.js"
-            },
-          },
-          {
-            type = "pwa-node",
-            request = "launch",
-            name = "Launch Current File (pwa-node with ts-node/esm)",
-            cwd = "${workspaceFolder}",
-            runtimeArgs = {
-              "--loader",
-              "ts-node/esm"
-            },
-            runtimeExecutable = "node",
-            args = {
-              "${file}"
-            },
-            sourceMaps = true,
-            protocol = "inspector",
-            console = "integratedTerminal",
-            skipFiles = {
-              "<node_internals>/**",
-              "node_modules/**"
-            },
-            resolveSourceMapLocations = {
-              "${workspaceFolder}/**",
-              "!**/node_modules/**"
-            }
-          },
+          -- {
+          --   type = "pwa-node",
+          --   request = "launch",
+          --   name = "Launch file",
+          --   program = "${file}",
+          --   cwd = "${workspaceFolder}",
+          --   console = "integratedTerminal",
+          --   skipFiles = {
+          --     "<node_internals>/**",
+          --   },
+          --   outFiles = {
+          --     "${workspaceFolder}/out/**/*.js"
+          --   },
+          -- },
+          -- {
+          --   type = "pwa-node",
+          --   request = "launch",
+          --   name = "Launch Current File (pwa-node with ts-node/esm)",
+          --   cwd = "${workspaceFolder}",
+          --   runtimeArgs = {
+          --     "--loader",
+          --     "ts-node/esm"
+          --   },
+          --   runtimeExecutable = "node",
+          --   args = {
+          --     "${file}"
+          --   },
+          --   sourceMaps = true,
+          --   protocol = "inspector",
+          --   console = "integratedTerminal",
+          --   skipFiles = {
+          --     "<node_internals>/**",
+          --     "node_modules/**"
+          --   },
+          --   resolveSourceMapLocations = {
+          --     "${workspaceFolder}/**",
+          --     "!**/node_modules/**"
+          --   }
+          -- },
           -- {
           --   type = "pwa-node",
           --   request = "launch",
@@ -81,14 +83,14 @@ return {
           --   console = "integratedTerminal",
           --
           -- },
-          {
-            type = "pwa-node",
-            request = "attach",
-            console = "integratedTerminal",
-            name = "Attach",
-            processId = require 'dap.utils'.pick_process,
-            cwd = "${workspaceFolder}",
-          },
+          -- {
+          --   type = "pwa-node",
+          --   request = "attach",
+          --   console = "integratedTerminal",
+          --   name = "Attach",
+          --   processId = require 'dap.utils'.pick_process,
+          --   cwd = "${workspaceFolder}",
+          -- },
           -- {
           --   type = "pwa-node",
           --   request = "launch",
@@ -104,6 +106,7 @@ return {
           -- }
         }
       end
+      require('dap.ext.vscode').load_launchjs(nil, { ['pwa-node'] = {'javascript', 'javascriptreact', 'typescriptreact', 'typescript' } })
     end
   },
   {
@@ -113,7 +116,6 @@ return {
         command = 'alacritty',
         args = { '-e' },
       }
-      require("dap.ext.vscode").load_launchjs()
     end,
     keys = {
       { "<leader>dB", function() require("dap").set_breakpoint(vim.fn.input('Breakpoint condition: ')) end, desc = "Breakpoint Condition" },
