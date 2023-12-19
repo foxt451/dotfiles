@@ -33,15 +33,19 @@ return {
             set_jumps = true,
             goto_next_start = {
               ["]m"] = "@function.outer",
+              ["]a"] = "@parameter.inner",
             },
             goto_next_end = {
               ["]M"] = "@function.outer",
+              ["]A"] = "@parameter.inner",
             },
             goto_previous_start = {
               ["[m"] = "@function.outer",
+              ["[a"] = "@parameter.inner",
             },
             goto_previous_end = {
               ["[M"] = "@function.outer",
+              ["[A"] = "@parameter.inner",
             },
           },
 
