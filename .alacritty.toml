@@ -26,4 +26,4 @@ mods="Shift"
 chars="\u001b[13;2u"
 
 [shell]
-program=/bin/zsh
+program="/bin/zsh"
