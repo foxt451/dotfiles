@@ -4,6 +4,17 @@ return {
     build = "npm install --legacy-peer-deps && npx gulp vsDebugServerBundle && mv dist out",
   },
   {
+    'Weissle/persistent-breakpoints.nvim',
+    dependencies = {
+      'mfussenegger/nvim-dap',
+    },
+    config = function()
+      require('persistent-breakpoints').setup {
+        load_breakpoints_event = { "BufReadPost" }
+      }
+    end
+  },
+  {
     "mxsdev/nvim-dap-vscode-js",
     dependencies = {
       "mfussenegger/nvim-dap",
@@ -106,7 +117,8 @@ return {
           -- }
         }
       end
-      require('dap.ext.vscode').load_launchjs(nil, { ['pwa-node'] = {'javascript', 'javascriptreact', 'typescriptreact', 'typescript' } })
+      require('dap.ext.vscode').load_launchjs(nil,
+        { ['pwa-node'] = { 'javascript', 'javascriptreact', 'typescriptreact', 'typescript' } })
     end
   },
   {
@@ -118,8 +130,8 @@ return {
       }
     end,
     keys = {
-      { "<leader>dB", function() require("dap").set_breakpoint(vim.fn.input('Breakpoint condition: ')) end, desc = "Breakpoint Condition" },
-      { "<leader>db", function() require("dap").toggle_breakpoint() end,                                    desc = "Toggle Breakpoint" },
+      { "<leader>dB", function() require("persistent-breakpoints.api").set_breakpoint(vim.fn.input('Breakpoint condition: ')) end, desc = "Breakpoint Condition" },
+      { "<leader>db", function() require("persistent-breakpoints.api").toggle_breakpoint() end,                                    desc = "Toggle Breakpoint" },
       { "<leader>dc", function() require("dap").continue() end,                                             desc = "Continue" },
       { "<leader>da", function() require("dap").continue({ before = get_args }) end,                        desc = "Run with Args" },
       { "<leader>dC", function() require("dap").run_to_cursor() end,                                        desc = "Run to Cursor" },
