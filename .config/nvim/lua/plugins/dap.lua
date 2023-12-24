@@ -43,6 +43,15 @@ return {
             },
             runtimeExecutable = "tsx",
           },
+          {
+            type = "pwa-node",
+            name = "TSX + internal",
+            request = "launch",
+            program = "${file}",
+            cwd = "${workspaceFolder}",
+            console = "integratedTerminal",
+            runtimeExecutable = "tsx",
+          },
           -- {
           --   type = "pwa-node",
           --   request = "launch",
@@ -130,7 +139,7 @@ return {
       }
     end,
     keys = {
-      { "<leader>dB", function() require("persistent-breakpoints.api").set_breakpoint(vim.fn.input('Breakpoint condition: ')) end, desc = "Breakpoint Condition" },
+      { "<leader>dB", function() require("persistent-breakpoints.api").set_conditional_breakpoint() end, desc = "Breakpoint Condition" },
       { "<leader>db", function() require("persistent-breakpoints.api").toggle_breakpoint() end,                                    desc = "Toggle Breakpoint" },
       { "<leader>dc", function() require("dap").continue() end,                                             desc = "Continue" },
       { "<leader>da", function() require("dap").continue({ before = get_args }) end,                        desc = "Run with Args" },
