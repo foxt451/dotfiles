@@ -23,6 +23,23 @@ return {
 				ensure_installed = { "lua_ls", "tsserver", "eslint", "jsonls" },
 				handlers = {
 					default_setup,
+					tsserver = function()
+						require('lspconfig').tsserver.setup({
+							capabilities = lsp_capabilities,
+							init_options = {
+								preferences = {
+									includeInlayParameterNameHints = 'all',
+									includeInlayParameterNameHintsWhenArgumentMatchesName = true,
+									includeInlayFunctionParameterTypeHints = true,
+									includeInlayVariableTypeHints = true,
+									includeInlayPropertyDeclarationTypeHints = true,
+									includeInlayFunctionLikeReturnTypeHints = true,
+									includeInlayEnumMemberValueHints = true,
+									importModuleSpecifierPreference = 'non-relative',
+								},
+							},
+						})
+					end,
 					lua_ls = function()
 						require('lspconfig').lua_ls.setup({
 							settings = {
@@ -31,7 +48,7 @@ return {
 										version = 'LuaJIT'
 									},
 									diagnostics = {
-										globals = {'vim'},
+										globals = { 'vim' },
 									},
 									workspace = {
 										library = {

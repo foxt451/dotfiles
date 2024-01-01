@@ -22,6 +22,7 @@ return { {
       require "telescope.builtin".find_files({ hidden = true, no_ignore = true })
     end, {})
     vim.keymap.set('n', '<leader>fo', builtin.oldfiles, {})
+    vim.keymap.set('n', '<leader>fs', '<cmd>Telescope lsp_dynamic_workspace_symbols<CR>', {})
     vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
     -- resume
     vim.keymap.set('n', '<Leader>fr', builtin.resume, {})
@@ -42,7 +43,12 @@ return { {
       },
     }
     require('telescope').load_extension('fzf')
+    require('telescope').load_extension('ui-select')
   end
 },
-  { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' }
+  { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
+  {
+    'nvim-telescope/telescope-ui-select.nvim',
+    dependencies = { 'nvim-telescope/telescope.nvim' },
+  }
 }
