@@ -7,7 +7,7 @@ return {
 
       configs.setup({
         ensure_installed = { "c", "lua", "vim", "vimdoc", "query", "javascript", "html", "typescript", "python", "bash",
-          "css", "json", "tsx", "yaml", "gitignore", "regex" },
+          "css", "json", "tsx", "yaml", "gitignore", "regex", "haskell" },
         sync_install = false,
         highlight = { enable = true },
         indent = { enable = false },
