@@ -52,6 +52,23 @@ return {
             console = "integratedTerminal",
             runtimeExecutable = "tsx",
           },
+          {
+            type = "pwa-node",
+            name = "Debug Current Test File",
+            request = "launch",
+            program = "${workspaceFolder}/node_modules/vitest/vitest.mjs",
+            args = {
+              "run",
+              "${relativeFile}"
+            },
+            cwd = "${workspaceFolder}",
+            console = "integratedTerminal",
+            skipFiles = {
+              "<node_internals>/**",
+              "**/node_modules/**"
+            },
+            smartStep = true,
+          },
           -- {
           --   type = "pwa-node",
           --   request = "launch",

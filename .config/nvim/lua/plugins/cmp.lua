@@ -42,6 +42,8 @@ return {
               fallback()
             end
           end, { "i", "s" }),
+          ['<C-j>'] = cmp.mapping.select_next_item({ count = 4 }),
+          ['<C-k>'] = cmp.mapping.select_prev_item({ count = 4 }),
           ['<M-Space>'] = cmp.mapping.complete(),
           ["<S-Tab>"] = cmp.mapping(function(fallback)
             if cmp.visible() then
