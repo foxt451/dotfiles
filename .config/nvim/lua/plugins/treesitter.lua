@@ -96,5 +96,17 @@ return {
     config = function()
       require('nvim-ts-autotag').setup()
     end
-  }
+  },
+  {
+    "chrisgrieser/nvim-various-textobjs",
+    lazy = false,
+    config = function()
+      local keymap = vim.keymap.set
+      keymap({ "o", "x" }, "iv", "<cmd>lua require('various-textobjs').value('inner')<CR>")
+      keymap({ "o", "x" }, "av", "<cmd>lua require('various-textobjs').value('outer')<CR>")
+
+      keymap({ "o", "x" }, "ik", "<cmd>lua require('various-textobjs').key('inner')<CR>")
+      keymap({ "o", "x" }, "ak", "<cmd>lua require('various-textobjs').key('outer')<CR>")
+    end
+  },
 }

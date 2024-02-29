@@ -151,9 +151,22 @@ return {
     "mfussenegger/nvim-dap",
     config = function()
       require("dap").defaults.fallback.external_terminal = {
-        command = 'alacritty',
-        args = { '-e' },
+        command = "alacritty",
+        args = { "--hold", "-e" }
       }
+      require("dap").defaults.fallback.terminal_win_cmd = [[belowright new +let\ b:dap_terminal\ =\ 1]]
+      -- require("dap").defaults.fallback.force_external_terminal = true
+      vim.api.nvim_create_autocmd("WinClosed", {
+        callback = function(args)
+          local buf = args.buf
+          local ok, _ = pcall(vim.api.nvim_buf_get_var, buf, "dap_terminal")
+          if ok then
+            vim.api.nvim_buf_delete(buf, { force = true })
+          end
+        end,
+        group = vim.api.nvim_create_augroup("dap-aautoclose", { clear = true }),
+        pattern = "*"
+      })
       vim.api.nvim_create_autocmd("FileType", {
         callback = function() require("dap.ext.autocompl").attach() end,
         group = vim.api.nvim_create_augroup("repl-autocompl", { clear = true }),
@@ -169,15 +182,42 @@ return {
       { "<leader>dg", function() require("dap").goto_() end,                                             desc = "Go to line (no execute)" },
       { "<leader>di", function() require("dap").step_into() end,                                         desc = "Step Into" },
       { "<leader>dj", function() require("dap").down() end,                                              desc = "Down" },
-      { "<leader>dk", function() require("dap").up() end,                                                desc = "Up" },
-      { "<leader>dl", function() require("dap").run_last() end,                                          desc = "Run Last" },
-      { "<leader>dO", function() require("dap").step_out() end,                                          desc = "Step Out" },
-      { "<leader>do", function() require("dap").step_over() end,                                         desc = "Step Over" },
-      { "<leader>dp", function() require("dap").pause() end,                                             desc = "Pause" },
-      { "<leader>dr", function() require("dap").repl.toggle() end,                                       desc = "Toggle REPL" },
-      { "<leader>ds", function() require("dap").session() end,                                           desc = "Session" },
-      { "<leader>dt", function() require("dap").terminate() end,                                         desc = "Terminate" },
-      { "<leader>dw", function() require("dap.ui.widgets").hover() end,                                  desc = "Widgets" },
+      {
+        "<leader>dk",
+        function()
+          -- find all buffers with dap_terminal set and kill them and their terminals
+          local bufs = vim.api.nvim_list_bufs()
+          for _, buf in ipairs(bufs) do
+            local ok, _ = pcall(vim.api.nvim_buf_get_var, buf, "dap_terminal")
+            if ok then
+              -- -- get the channel id using local option 'channel'
+              -- local channel = vim.api.nvim_buf_get_option(buf, "channel")
+              -- -- echo the channel id
+              -- print("channel: ", channel)
+              -- vim.fn.chanclose(channel)
+              -- -- wipeout the buffer
+              vim.api.nvim_buf_delete(buf, { force = true })
+            end
+          end
+        end,
+        desc = "Kill all the terminals that are dap"
+      },
+      { "<leader>dl", function() require("dap").run_last() end,         desc = "Run Last" },
+      { "<leader>dO", function() require("dap").step_out() end,         desc = "Step Out" },
+      { "<leader>do", function() require("dap").step_over() end,        desc = "Step Over" },
+      { "<leader>dp", function() require("dap").pause() end,            desc = "Pause" },
+      { "<leader>dr", function() require("dap").repl.toggle() end,      desc = "Toggle REPL" },
+      { "<leader>ds", function() require("dap").session() end,          desc = "Session" },
+      { "<leader>dt", function() require("dap").terminate() end,        desc = "Terminate" },
+      { "<leader>dw", function() require("dap.ui.widgets").hover() end, desc = "Widgets" },
+      -- -- add a command to close the window that was used by the debug terminal
+      -- { "<leader>dx", function()
+      --   -- get the buffer that is used by the terminal
+      --   -- this MAY NOT be the current buffer
+      --   -- do not use the current buffer!
+      --   -- NO nvim_get_current_buf
+      --   local buf = vim.api.nvim_list_bufs()
+
     },
   },
   -- {

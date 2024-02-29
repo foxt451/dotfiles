@@ -101,5 +101,6 @@ source $ZSH/oh-my-zsh.sh
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 alias config='git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 export EDITOR=nvim
+alias gtypist='gtypist -b'
 
 [ -f "$HOME/.ghcup/env" ] && source "$HOME/.ghcup/env" # ghcup-env
